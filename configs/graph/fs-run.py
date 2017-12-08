@@ -22,6 +22,12 @@ from system import MySystem
 SimpleOpts.add_option("--script", default='',
                       help="Script to execute in the simulated system")
 
+SimpleOpts.add_option("--kernel", default='',
+                      help="Path to the kernel file")
+
+SimpleOpts.add_option("--disk", default='',
+                      help="Path to the disk image")
+
 if __name__ == "__m5_main__":
     (opts, args) = SimpleOpts.parse_args()
 
@@ -32,6 +38,9 @@ if __name__ == "__m5_main__":
     # This file gets read and executed by the simulated system after boot.
     # Note: The disk image needs to be configured to do this.
     system.readfile = opts.script
+
+    system.kernel = opts.kernel
+    system.setDiskImage(opts.disk)
 
     # set up the root SimObject and start the simulation
     root = Root(full_system=True, system=system)
