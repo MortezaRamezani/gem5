@@ -26,3 +26,4 @@ m5out
 /system/arm/aarch64_bootloader/boot_emm.arm64
 
 /x86-system/
+/logs/

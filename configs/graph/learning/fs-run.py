@@ -6,16 +6,20 @@
 #
 # Authors: Morteza Ramezani
 
-
+import optparse
 import sys
 
 import m5
 from m5.objects import *
+from m5.util import addToPath, fatal
 
 # # sys.path.append('configs/common/')  # For the next line...
 # from common import SimpleOpts
-sys.path.append('configs/common/') # For the next line...
-import SimpleOpts
+# sys.path.append('configs/common/') # For the next line...
+
+addToPath('../')
+from common import SimpleOpts
+from common import Options
 
 from system import MySystem
 
@@ -29,7 +33,14 @@ SimpleOpts.add_option("--disk", default='',
                       help="Path to the disk image")
 
 if __name__ == "__m5_main__":
+
+    # Add options
+    # parser = optparse.OptionParser()
+    # Options.addCommonOptions(parser)
+    # Options.addFSOptions(parser)
+
     (opts, args) = SimpleOpts.parse_args()
+    # (opts, args) = parser.parse_args()
 
     # create the system we are going to simulate
     system = MySystem(opts)

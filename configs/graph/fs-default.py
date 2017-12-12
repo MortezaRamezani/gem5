@@ -311,7 +311,7 @@ if '--ruby' in sys.argv:
 
 (options, args) = parser.parse_args()
 
-print options, args
+# print options, args
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -337,6 +337,7 @@ else:
               SysConfig(disk=options.disk_image, rootdev=options.root_device,
                         mem=options.mem_size, os_type=options.os_type)]
     else:
+        print 'heeereee'
         bm = [SysConfig(disk=options.disk_image, rootdev=options.root_device,
                         mem=options.mem_size, os_type=options.os_type)]
 

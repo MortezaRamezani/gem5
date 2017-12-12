@@ -14,14 +14,19 @@ line options from each individual class.
 """
 import sys
 import m5
+from m5.util import addToPath, fatal
 from m5.objects import Cache
 
+addToPath('../')
+from common import SimpleOpts
+from common import Options
+
 # Add the common scripts to our path
-m5.util.addToPath('../../')
+# m5.util.addToPath('../')
 #
-# from common import SimpleOpts
+from common import SimpleOpts
 # sys.path.append('configs/common/') # For the next line...
-import SimpleOpts
+# import SimpleOpts
 
 # Some specific options for caches
 # For all options see src/mem/cache/BaseCache.py

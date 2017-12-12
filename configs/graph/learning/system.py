@@ -51,7 +51,7 @@ class MySystem(LinuxX86System):
         # Change this path to point to the kernel you want to use
         # Kernel from http://www.m5sim.org/dist/current/x86/x86-system.tar.bz2
         # self.kernel = 'x86-system/binaries/x86_64-vmlinux-2.6.22.9'
-        self.kernel = '/home/morteza/Works/linux-kernel/linux-3.4.112/x86_64-vmlinux-3.4.112'
+        # self.kernel = '/home/morteza/Works/linux-kernel/linux-3.4.112/x86_64-vmlinux-3.4.112'
 
         # Options specified on the kernel command line
         boot_options = ['earlyprintk=ttyS0', 'console=ttyS0', 'lpj=7999923',
@@ -63,7 +63,7 @@ class MySystem(LinuxX86System):
         # or anything else.
         # Disks from http://www.m5sim.org/dist/current/x86/x86-system.tar.bz2
         # self.setDiskImage('x86-system//disks/linux-x86.img')
-        self.setDiskImage('/home/morteza/Works/linux-kernel/linux-3.4.112/ubuntu-14.04.img')
+        # self.setDiskImage('/home/morteza/Works/linux-kernel/linux-3.4.112/ubuntu-14.04.img')
 
         # Create the CPU for our system.
         self.createCPU()
