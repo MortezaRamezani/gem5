@@ -1,0 +1,74 @@
+diff --git a/src/arch/x86/isa/decoder/two_byte_opcodes.isa b/src/arch/x86/isa/decoder/two_byte_opcodes.isa
+index f0698ce..2eee65a 100644
+--- a/src/arch/x86/isa/decoder/two_byte_opcodes.isa
++++ b/src/arch/x86/isa/decoder/two_byte_opcodes.isa
+@@ -216,9 +216,12 @@
+                     0x57: m5reserved3({{
+                         warn("M5 reserved opcode 3 ignored.\n");
+                     }}, IsNonSpeculative);
+-                    0x58: m5reserved4({{
+-                        warn("M5 reserved opcode 4 ignored.\n");
+-                    }}, IsNonSpeculative);
++                    // 0x58: m5reserved4({{
++                    //     warn("M5 reserved opcode 4 ignored.\n");
++                    // }}, IsNonSpeculative);
++                    0x58: m5_gem5fs_call({{
++                        PseudoInst::gem5fs_call(xc->tcBase(), Rdi, Rsi, Rdx);
++                        }}, IsNonSpeculative);
+                     0x59: m5reserved5({{
+                         warn("M5 reserved opcode 5 ignored.\n");
+                     }}, IsNonSpeculative);
+diff --git a/src/sim/pseudo_inst.cc b/src/sim/pseudo_inst.cc
+index dc37a8c..bc3960e 100644
+--- a/src/sim/pseudo_inst.cc
++++ b/src/sim/pseudo_inst.cc
+@@ -79,6 +79,7 @@
+ #include "sim/stats.hh"
+ #include "sim/system.hh"
+ #include "sim/vptr.hh"
++#include "gem5fs/gem5/gem5fs.h"
+ 
+ using namespace std;
+ 
+@@ -489,6 +490,17 @@ m5checkpoint(ThreadContext *tc, Tick delay, Tick period)
+ }
+ 
+ uint64_t
++gem5fs_call(ThreadContext *tc, Addr inputAddr, Addr requestAddr, Addr resultAddr)
++{
++    if (!FullSystem) {
++        panicFsOnlyPseudoInst("gem5fs_call");
++        return 0;
++    }
++
++    return gem5fs::ProcessRequest(tc, inputAddr, requestAddr, resultAddr);
++}
++
++uint64_t
+ readfile(ThreadContext *tc, Addr vaddr, uint64_t len, uint64_t offset)
+ {
+     DPRINTF(PseudoInst, "PseudoInst::readfile(0x%x, 0x%x, 0x%x)\n",
+diff --git a/src/sim/pseudo_inst.hh b/src/sim/pseudo_inst.hh
+index d9b981f..d5cfbfb 100644
+--- a/src/sim/pseudo_inst.hh
++++ b/src/sim/pseudo_inst.hh
+@@ -69,6 +69,7 @@ void quiesceSkip(ThreadContext *tc);
+ void quiesceNs(ThreadContext *tc, uint64_t ns);
+ void quiesceCycles(ThreadContext *tc, uint64_t cycles);
+ uint64_t quiesceTime(ThreadContext *tc);
++uint64_t gem5fs_call(ThreadContext *tc, Addr pathAddr, Addr requestAddr, Addr resultAddr);
+ uint64_t readfile(ThreadContext *tc, Addr vaddr, uint64_t len,
+     uint64_t offset);
+ uint64_t writefile(ThreadContext *tc, Addr vaddr, uint64_t len,
+diff --git a/util/m5/m5op_x86.S b/util/m5/m5op_x86.S
+index 6d16293..cd85a2a 100644
+--- a/util/m5/m5op_x86.S
++++ b/util/m5/m5op_x86.S
+@@ -75,6 +75,7 @@ TWO_BYTE_OP(m5_reset_stats, M5OP_RESET_STATS)
+ TWO_BYTE_OP(m5_dump_stats, M5OP_DUMP_STATS)
+ TWO_BYTE_OP(m5_dump_reset_stats, M5OP_DUMP_RESET_STATS)
+ TWO_BYTE_OP(m5_checkpoint, M5OP_CHECKPOINT)
++TWO_BYTE_OP(m5_gem5fs_call, gem5fs_call_func)
+ TWO_BYTE_OP(m5_read_file, M5OP_READ_FILE)
+ TWO_BYTE_OP(m5_write_file, M5OP_WRITE_FILE)
+ TWO_BYTE_OP(m5_debug_break, M5OP_DEBUG_BREAK)

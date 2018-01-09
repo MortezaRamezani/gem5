@@ -69,6 +69,7 @@ void quiesceSkip(ThreadContext *tc);
 void quiesceNs(ThreadContext *tc, uint64_t ns);
 void quiesceCycles(ThreadContext *tc, uint64_t cycles);
 uint64_t quiesceTime(ThreadContext *tc);
+uint64_t gem5fs_call(ThreadContext *tc, Addr pathAddr, Addr requestAddr, Addr resultAddr);
 uint64_t readfile(ThreadContext *tc, Addr vaddr, uint64_t len,
     uint64_t offset);
 uint64_t writefile(ThreadContext *tc, Addr vaddr, uint64_t len,

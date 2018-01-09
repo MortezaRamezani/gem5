@@ -79,6 +79,7 @@
 #include "sim/stats.hh"
 #include "sim/system.hh"
 #include "sim/vptr.hh"
+#include "gem5fs/gem5/gem5fs.h"
 
 using namespace std;
 
@@ -486,6 +487,17 @@ m5checkpoint(ThreadContext *tc, Tick delay, Tick period)
         Tick repeat = period * SimClock::Int::ns;
         exitSimLoop("checkpoint", 0, when, repeat);
     }
+}
+
+uint64_t
+gem5fs_call(ThreadContext *tc, Addr inputAddr, Addr requestAddr, Addr resultAddr)
+{
+    if (!FullSystem) {
+        panicFsOnlyPseudoInst("gem5fs_call");
+        return 0;
+    }
+
+    return gem5fs::ProcessRequest(tc, inputAddr, requestAddr, resultAddr);
 }
 
 uint64_t
